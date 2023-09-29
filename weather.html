@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="weather.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="weatherInfo"></div>
+    </div>
+
+    <script>
+        function getWeather() {
+            const apiKey = '609ec7a07dca6af5e80647ac3ab84a0b'; 
+            const city = document.getElementById('cityInput').value;
+            const weatherInfo = document.getElementById('weatherInfo');
+
+            if (!city) {
+                weatherInfo.innerHTML = 'Please enter a city name.';
+                return;
+            }
+
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const { name, main, weather } = data;
+                    const temperature = main.temp;
+                    const description = weather[0].description;
+
+                    weatherInfo.innerHTML = `
+                        <h2>Weather in ${name}</h2>
+                        <p>Temperature: ${temperature}°C</p>
+                        <p>Description: ${description}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error(error);
+                    weatherInfo.innerHTML = 'City not found. Please try again.';
+                });
+        }
+    </script>
+</body>
+</html>
